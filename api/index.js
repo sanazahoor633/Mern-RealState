@@ -15,6 +15,18 @@ mongoose.connect(process.env.MONGO_URL).then(()=>{ console.log('connect with db'
 
 app.use(express.json())
 app.use('/api/user', userRouter);
-app.use('/api/auth', authRouter)
+app.use('/api/auth', authRouter);
+
+
+app.use((err, req, res, next) =>{
+    const statusCode = err.statusCode || 500;
+    const message = err.message || 'internal server error';
+    return res.status(statusCode).json({
+        sucess: false,
+        message,
+        statusCode
+
+    })
+})
 
 app.listen(PORT, () =>console.log(`server is running ${PORT}`))

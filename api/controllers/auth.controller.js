@@ -1,6 +1,7 @@
 import User from "../models/user.model.js"
 import bcrypt from 'bcryptjs'
-export const signUp = async (req, res) => {
+import { errorHandler } from "../utils/error.js";
+export const signUp = async (req, res, next) => {
  
     const {username, email, password} = req.body;
     // const salt =  await bcrypt.genSalt(10);
@@ -17,6 +18,6 @@ try{
 res.status(201).json({message: 'user created succefull'});
 }
 catch(error){
-res.status(500).json({error: 'you are tryiing same password and email'})
+next(error)
 }
 }
