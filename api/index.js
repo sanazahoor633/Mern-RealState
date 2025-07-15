@@ -11,8 +11,6 @@ mongoose.connect(process.env.MONGO_URL).then(()=>{ console.log('connect with db'
 });
 
 
-
-
 app.use(express.json())
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
@@ -25,7 +23,6 @@ app.use((err, req, res, next) =>{
         sucess: false,
         message,
         statusCode
-
     })
 })
 
