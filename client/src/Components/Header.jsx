@@ -9,7 +9,7 @@ const Header = () => {
     <div className='flex justify-between items-center max-w-7xl mx-auto p-3'>
  <Link to='/' >
   <h1 className='font-bold text-sm sm:text-xl flex flex-wrap'>
-         <span className='text-slate-500'>Sahand</span>
+         <span className='text-slate-500'>Sana's</span>
          <span className='text-slate-800'>Estate</span>
     </h1>
 

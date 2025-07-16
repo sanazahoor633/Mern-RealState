@@ -37,7 +37,7 @@ if(data.success === false){
 }
 setloading(false)
 seterror(null)
-navigate('/sign-in')
+// navigate('/sign-in')
 console.log(data);
 } 
 
