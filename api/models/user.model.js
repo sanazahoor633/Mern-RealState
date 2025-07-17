@@ -16,9 +16,14 @@ const userSchema = new mongoose.Schema({
         required: true,
         
     },
+    avatar: {
+        type: String,
+        default: 'https://www.nicepng.com/png/full/73-730154_open-default-profile-picture-png.png'
+    }
     
 
-}, {timstamps: true})
+}, { timstamps: true } 
+)
 
 const User = mongoose.model('User', userSchema)
 export default User;

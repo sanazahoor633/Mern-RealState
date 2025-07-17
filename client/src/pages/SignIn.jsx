@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { signInFailure, signInStart, signInSucess } from "../redux/user/userSlice";
+import { signInFailure, signInStart, signInSuccess } from "../redux/user/userSlice";
+import Oauth from "../Components/Oauth";
 
 const SignIn = () => {
   const [formData, setformData] = useState({});
@@ -27,16 +28,25 @@ const response = await fetch('/api/auth/signin', {
     'content-type': 'application/json',
   },
   body: JSON.stringify(formData),
+
 })
 
+  const data = await response.json();
+  // console.log('data is', data);
+  
 
-const data = await response.json();
 
 if(data.success === false){
  dispatch(signInFailure(data.message))
   return;
 }
-dispatch(signInSucess(data))
+
+
+
+// sanitize data to remove non-serializable values
+// const serializableData = JSON.parse(JSON.stringify(data));
+const cleanData = JSON.parse(JSON.stringify(data));
+dispatch(signInSuccess(cleanData))
 navigate('/')
 console.log(data);
 } 
@@ -74,6 +84,7 @@ dispatch(signInFailure(error.message))
         <button disabled={loading} className="bg-slate-800 text-white font-semibold text-xl p-3 rounded-lg border-none uppercase hover:opacity-90 disabled:opacity-80">
           {loading ? 'Loading...' : 'Sign In'}
         </button>
+           <Oauth/>
       </form>
       <div className="flex gap-4 mt-5">
         <p>Have an account?</p>
@@ -81,6 +92,7 @@ dispatch(signInFailure(error.message))
           <span className="text-blue-900">Sign up</span>
         </Link>
       </div>
+    
 
     {error && <p className="text-red-500 mt-8">{error}</p>}
     
