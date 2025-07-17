@@ -37,7 +37,7 @@ if(data.success === false){
 }
 setloading(false)
 seterror(null)
-// navigate('/sign-in')
+navigate('/sign-in')
 console.log(data);
 } 
 
@@ -62,6 +62,7 @@ catch(error){
           type="text"
           placeholder="username"
           onChange={handleOnchange}
+          required
         />
         <input
           className="border-1 border-gray-500 bg-white text-xl p-3 rounded-md outline-none "
@@ -69,6 +70,7 @@ catch(error){
           type="email"
           placeholder="email"
           onChange={handleOnchange}
+           required
         />
         <input
           className="border-1 border-gray-500 bg-white text-xl p-3 rounded-md outline-none "
@@ -76,6 +78,7 @@ catch(error){
           type="password"
           placeholder="password"
           onChange={handleOnchange}
+           required
         />
         <button disabled={loading} className="bg-slate-800 text-white font-semibold text-xl p-3 rounded-lg border-none uppercase hover:opacity-90 disabled:opacity-80">
           {loading ? 'Loading...' : 'Sign up'}
