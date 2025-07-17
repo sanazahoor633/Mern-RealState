@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Oauth from "../Components/Oauth";
-import { useDispatch, useSelector } from "react-redux";
+// import { useDispatch, useSelector } from "react-redux";
 import { signInFailure, signInStart, signInSuccess } from "../redux/user/userSlice";
 
 const SignUp = () => {
 
 
-  const dispatch = useDispatch();
-  const {loading, error} = useSelector((state)=> state.user)
+  // const dispatch = useDispatch();
+  // const {loading, error} = useSelector((state)=> state.user)
   const [formData, setformData] = useState({});
-  // const [error, seterror] = useState(null);
-  // const [loading, setloading] = useState(false);
+  const [error, seterror] = useState(null);
+  const [loading, setloading] = useState(false);
   const navigate = useNavigate();
 
   const handleOnchange = (e) => {
@@ -23,9 +23,9 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
 e.preventDefault();
-
+setloading(false)
 try{
-  dispatch(signInStart())
+  // dispatch(signInStart())
 const response = await fetch('/api/auth/signup', {
   method: 'POST',
     headers: {
@@ -48,26 +48,26 @@ console.log('signup data after data', data);
 
 
 if(data.success === false){
-    // setloading(false)
-  // seterror(data.message)
-  // console.log('basic error is', error);
-   dispatch(signInFailure(data.message))
+    setloading(false)
+  seterror(data.message)
+  console.log('basic error is', error);
+  //  dispatch(signInFailure(data.message))
   return;
 }
-// setloading(false)
-// seterror(null);
+setloading(false)
+seterror(null);
 
-const cleanData = JSON.parse(JSON.stringify(data));
-dispatch(signInSuccess(cleanData))
+// const cleanData = JSON.parse(JSON.stringify(data));
+// dispatch(signInSuccess(cleanData))
 navigate('/sign-in')
 console.log('signup data is', data);
 } 
 
 catch(error){
 
-  // setloading(false);
-  // seterror(error.message);
-dispatch(signInFailure(error.message))
+  setloading(false);
+  seterror(error.message);
+// dispatch(signInFailure(error.message))
 
 
 }

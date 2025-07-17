@@ -10,6 +10,7 @@ const {loading, error} = useSelector((state) => state.user)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+
   const handleOnchange = (e) => {
     setformData({
       ...formData,
@@ -20,6 +21,10 @@ const {loading, error} = useSelector((state) => state.user)
   const handleSubmit = async (e) => {
 e.preventDefault();
 
+  const controller = new AbortController();
+const timeout = setTimeout(() => controller.abort(), 10000); 
+
+
 try{
 dispatch(signInStart())
 const response = await fetch('/api/auth/signin', {
@@ -28,16 +33,20 @@ const response = await fetch('/api/auth/signin', {
     'content-type': 'application/json',
   },
   body: JSON.stringify(formData),
-
+ signal: controller.signal,
 })
 
+
+
+
+ clearTimeout(timeout); // Cancel timeout if successful
   const data = await response.json();
   // console.log('data is', data);
-  
+ 
 
 
-if(data.success === false){
- dispatch(signInFailure(data.message))
+if(!response.ok || data.success === false){
+ dispatch(signInFailure(data.message) || 'Login failed')
   return;
 }
 
@@ -52,6 +61,7 @@ console.log(data);
 } 
 
 catch(error){
+    clearTimeout(timeout); // Cancel timeout in error case
 dispatch(signInFailure(error.message))
 // seterror("This is a test error message."); 
  
