@@ -8,21 +8,39 @@ dotenv.config()
 
 
 
+
 export const signUp = async (req, res, next) => {
   const { username, email, password } = req.body;
 
 
-  const salt = bcrypt.genSaltSync(20);
-  const hashpassword = bcrypt.hashSync(password, salt);
-  const userData = new User({ username, email, password: hashpassword });
+ 
+  const fromEnv = Number(process.env.BCRT)
+const salt = bcrypt.genSaltSync(fromEnv)
 
-  try {
-    await userData.save();
-    res.status(201).json({ message: "user created successfull"});
-  } catch (error) {
-    next(error);
-  }
-};            
+
+const hashpassword = bcrypt.hashSync(password, salt)
+const newUser = new User({username, email, password: hashpassword})
+ const validUser = await User.findOne({ email });
+
+ if(validUser) next(errorHandler(404, "This email is already in use."));
+
+
+try {
+await newUser.save()
+res.status(200).json('user created sucessfull')
+}
+catch(error){
+next(error)
+}
+
+};           
+
+ 
+
+
+
+
+
 
 
 export const signIn = async (req, res, next) => {
@@ -36,7 +54,7 @@ export const signIn = async (req, res, next) => {
     const token = jwt.sign({ id: validUser._id }, process.env.JWT_TOKEN);
     const { password: pass, ...rest } = validUser._doc;
     //user add my self
-    res.cookie("token", token, { httpOnly: true }).status(200).json({success: true, user: rest});
+    res.cookie("access_token", token, { httpOnly: true }).status(200).json(rest);
   } catch (error) {
     next(error);
   }

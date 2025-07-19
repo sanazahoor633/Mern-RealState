@@ -1,8 +1,9 @@
-import React, { Profiler } from 'react'
+import React, { Profiler, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 const Profile = () => {
   const { currentUser } = useSelector((state) => state.user)
+  const fileRef = useRef()
 
   //  if (!currentUser) {
   //   return (
@@ -15,7 +16,8 @@ const Profile = () => {
     <div  className='max-w-lg m-auto p-3'>
       <h1 className='text-5xl font-semibold text-center my-7'>Profile</h1>
       <form className='flex flex-col gap-4' action="">
-<img className='w-25 h-25 mb-3 rounded-full object-center object-cover self-center' src={currentUser.avatar} alt="profile" />
+        <input type="file" ref={fileRef} hidden accept='image/*' />
+<img  onClick={()=> fileRef.current.click()} className='w-25 h-25 mb-3 rounded-full object-center object-cover self-center' src={currentUser.avatar} alt="profile" />
 <input type="text" className="shadow-xl p-3 rounded-md  bg-white" placeholder='username' id='username' />
 
 <input type="email" className="shadow-xl p-3 rounded-md  bg-white" placeholder='email' id='email' />

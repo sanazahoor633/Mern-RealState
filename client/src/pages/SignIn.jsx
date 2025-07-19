@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { signInFailure, signInStart, signInSuccess } from "../redux/user/userSlice";
 import Oauth from "../Components/Oauth";
 
 const SignIn = () => {
+
   const [formData, setformData] = useState({});
 const {loading, error} = useSelector((state) => state.user)
   const navigate = useNavigate();
@@ -21,10 +23,6 @@ const {loading, error} = useSelector((state) => state.user)
   const handleSubmit = async (e) => {
 e.preventDefault();
 
-  const controller = new AbortController();
-const timeout = setTimeout(() => controller.abort(), 10000); 
-
-
 try{
 dispatch(signInStart())
 const response = await fetch('/api/auth/signin', {
@@ -33,38 +31,52 @@ const response = await fetch('/api/auth/signin', {
     'content-type': 'application/json',
   },
   body: JSON.stringify(formData),
- signal: controller.signal,
+
 })
 
 
 
 
- clearTimeout(timeout); // Cancel timeout if successful
   const data = await response.json();
   // console.log('data is', data);
  
 
 
-if(!response.ok || data.success === false){
+if( data.success === false){
+     toast.error(data.message || 'Something went wrong.');
  dispatch(signInFailure(data.message) || 'Login failed')
   return;
 }
 
+// let user = data.user;
+// if (typeof user === 'string') {
+//   user = JSON.parse(user); // Fix stringified object
+// }
+// dispatch(signInSuccess(data));
 
 
-// sanitize data to remove non-serializable values
-// const serializableData = JSON.parse(JSON.stringify(data));
-const cleanData = JSON.parse(JSON.stringify(data));
-dispatch(signInSuccess(cleanData))
+
+dispatch(signInSuccess(data))
+
+ toast.success('Login successful!');
 navigate('/')
 console.log(data);
 } 
 
 catch(error){
-    clearTimeout(timeout); // Cancel timeout in error case
+ 
 dispatch(signInFailure(error.message))
 // seterror("This is a test error message."); 
  
+
+    if (error.name === 'AbortError') {
+      dispatch(signInFailure('Request timed out. Please try again.'));
+    } else {
+      // toast.error(error.message || 'Something went wrong.');
+      dispatch(signInFailure(error.message || 'Something went wrong.'));
+    }
+
+
 }
 
   }
@@ -72,7 +84,7 @@ dispatch(signInFailure(error.message))
 
   return (
     <div className="max-w-lg mx-auto p-3">
-      <h2 className="text-center text-3xl font-semibold mt-7">Sign In</h2>
+   <h2 className="text-center text-3xl font-semibold mt-7">Sign In</h2>
       <form onSubmit={handleSubmit} className="flex  flex-col gap-3 mt-8" action="">
        
         <input
