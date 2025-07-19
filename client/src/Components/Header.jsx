@@ -2,8 +2,11 @@ import React from 'react'
   import { ToastContainer, toast } from 'react-toastify';
 import { FaSearch } from "react-icons/fa";
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Header = () => {
+
+  const {currentUser} =  useSelector(state => state.user)
   return (
    <header className="bg-slate-200 shadow-md ">
     <ToastContainer/>
@@ -21,7 +24,7 @@ const Header = () => {
         <FaSearch className='text-slate-700'/>
 
     </form>
-    <ul className='flex gap-4'>
+    <ul className='flex gap-4 items-center'>
          <Link to='/' >
         <li className='hidden sm:inline hover:underline transition-all duration-200'>Home</li>
         </Link>
@@ -29,7 +32,12 @@ const Header = () => {
         <li className='hidden sm:inline hover:underline transition-all duration-200' >About</li>
         </Link>
          <Link to='sign-in' >
-        <li className=' hover:underline transition-all duration-200' >SignIn</li>
+        <li className=' hover:underline transition-all duration-200' > signin
+          {/* <img 
+           className="w-10 h-10 rounded-full object-center object-cover"
+          src={currentUser.avatar} alt="" /> */}
+        </li>
+        
         </Link>
     </ul>
 
