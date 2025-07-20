@@ -8,7 +8,6 @@ res.json({
 })
 }
 
-
 export const updatedUser =  async (req, res, next) => {
 if(req.user.id !== req.params.id) return next(errorHandler(403, 'You can only update your own account'));
 
@@ -29,8 +28,20 @@ try{
 
     const {password, ...rest} = updatedUser._doc;
 
-    res.status(200).json(rest)
-    }catch(error){
+    return res.status(200).json(rest)
+    }
+    catch(error){
  next(errorHandler(500, 'Failed to update user'))
 }
+}
+export const deleteUser = async (req, res, next) => {
+    if(req.user.id !== req.params.id) return next(errorHandler(401, 'You can only delete your own account'))
+        try{
+    await User.findByIdAndDelete(req.params.id);
+    clearCookie('access_token')
+    return res.status(200).json('User has been deleted')
+        }
+    catch(error){
+next(error)
+    }
 }

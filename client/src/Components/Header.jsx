@@ -39,6 +39,9 @@ const Header = () => {
         </li>
         
         </Link>
+           <Link to='profile' >
+        <li className='hidden sm:inline hover:underline transition-all duration-200' >profile</li>
+        </Link>
     </ul>
 
     </div>
